@@ -1,3 +1,59 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@font-face {
+  font-family: 'Manuka';
+  font-weight: 700;
+  src: url('../../public/fonts/manuka.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Basic-Grotesque-Pro-Regular';
+  font-weight: 400;
+  src: url('../../public/fonts/basis_grotesque_pro_regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Basic-Grotesque-Pro';
+  font-weight: 900;
+  src: url('../../public/fonts/basis_grotesque_pro.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Fainancier Display';
+    font-weight: 400;
+    src: url('../../public/fonts/financierdisplay.woff2') format('woff2');
+}
+
+a, button{
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+
+}
+.js-work-link {
+  color: black;
+  text-decoration: none;
+  font-size: 12px;
+
+  position: relative;
+
+  .underline {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: calc(1px);
+    background-color: #333333;
+  }
+
+}
+#navbar {
+  top: 0;
+  transition: top 1s;
+}
+
+
