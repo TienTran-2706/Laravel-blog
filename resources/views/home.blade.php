@@ -1,7 +1,7 @@
 <x-layout>
     @section('title', 'Home - The Branch')
 
-    <section class="flex flex-col gap-8 justify-center items-center text-center text-text bg-yellow min-h-screen">
+    <section class="flex flex-col mt-20 gap-8 justify-center items-center text-center text-text bg-yellow min-h-screen">
         <h1 class=" font-bold font-manuka uppercase leading-[164px] text-center text-[200px] tracking-[2px] max-md:mt-10 max-md:max-w-full max-md:text-4xl max-md:leading-9">
             Start with<br/> your own.
         </h1>
@@ -126,8 +126,8 @@
             </div>
             <div class="w-full max-md:max-w-full pt-[30px]">
                 <div class="flex gap-5 max-md:flex-col max-md:gap-0">
-                    @foreach(range(1, 3) as $i)
-                        <x-article-card />
+                    @foreach($posts as $post)
+                        <x-post-item :post="$post" ></x-post-item>
                     @endforeach
                 </div>
             </div>

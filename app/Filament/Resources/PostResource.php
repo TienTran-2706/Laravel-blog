@@ -25,34 +25,94 @@ class PostResource extends Resource
 
     public static function form(Form $form): Form
     {
+        // return $form
+        //     ->schema([
+        //         Forms\Components\Grid::make(1)
+        //             ->schema([
+        //                 Forms\Components\Grid::make(2)
+        //                     ->schema([
+        //                         Forms\Components\TextInput::make('title')
+        //                             ->required()
+        //                             ->maxLength(2048)
+        //                             ->reactive()
+        //                             ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state))),
+        //                         Forms\Components\TextInput::make('slug')
+        //                             ->required()
+        //                             ->maxLength(2048),
+        //                     ]),
+        //                 Forms\Components\FileUpload::make('thumbnail'),
+        //                 Forms\Components\FileUpload::make('featured_image'),
+        //                 Forms\Components\RichEditor::make('body')
+        //                     ->required()
+        //                     ->columnSpanFull(),
+        //                 Forms\Components\Toggle::make('active')
+        //                     ->required(),
+        //                 Forms\Components\DateTimePicker::make('publisted_at'),
+        //                 Forms\Components\Select::make('category_id')
+        //                     ->multiple()
+        //                     ->relationship('categories', 'title')
+        //                     ->required(),
+        //             ])
+        //     ]);
+
+
         return $form
             ->schema([
-                Forms\Components\Grid::make(1)
+                Forms\Components\Section::make()
                     ->schema([
-                        Forms\Components\Grid::make(2)
-                            ->schema([
-                                Forms\Components\TextInput::make('title')
-                                    ->required()
-                                    ->maxLength(2048)
-                                    ->reactive()
-                                    ->afterStateUpdated(fn ($set, $state) => $set('slug', Str::slug($state))),
-                                Forms\Components\TextInput::make('slug')
-                                    ->required()
-                                    ->maxLength(2048),
-                            ]),
-                        Forms\Components\FileUpload::make('thumbnail'),
+                        Forms\Components\TextInput::make('title')
+                            ->required()
+                            ->live(onBlur: true)
+                            ->maxLength(255)
+                            ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
+
+                        Forms\Components\TextInput::make('slug')
+                            ->disabled()
+                            ->dehydrated()
+                            ->required()
+                            ->maxLength(255)
+                            ->unique(Post::class, 'slug', ignoreRecord: true),
 
                         Forms\Components\RichEditor::make('body')
                             ->required()
-                            ->columnSpanFull(),
-                        Forms\Components\Toggle::make('active')
-                            ->required(),
-                        Forms\Components\DateTimePicker::make('publisted_at'),
+                            ->columnSpan('full'),
+
                         Forms\Components\Select::make('category_id')
                             ->multiple()
                             ->relationship('categories', 'title')
+                            ->searchable()
                             ->required(),
+
+                    Forms\Components\DateTimePicker::make('published_at')
+                            ->label('Published Date'),
+
                     ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Thumbnail')
+                    ->schema([
+                        Forms\Components\FileUpload::make('thumbnail')
+                            ->image()
+                            ->disk('public')
+                            ->directory('uploads')
+                            ->hiddenLabel(),
+
+
+                    ])
+                    ->collapsible(),
+                Forms\Components\Section::make('Featured_image')
+                    ->schema([
+                        Forms\Components\FileUpload::make('featured_image')
+                            ->image()
+                            ->disk('public')
+                            ->directory('uploads')
+                            ->hiddenLabel(),
+
+
+                ])
+                ->collapsible(),
+                Forms\Components\Toggle::make('active')
+                        ->required(),
             ]);
     }
 
@@ -60,15 +120,13 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('thumbnail')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('thumbnail'),
+                Tables\Columns\ImageColumn::make('featured_image'),
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('publisted_at')
+                Tables\Columns\TextColumn::make('published_at')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')

@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('title', length: 2048);
             $table->string('slug', length: 2048);
-            $table->string('thumbnail', length: 2048)->nullable();
+            $table->string('thumbnail', length: 2048);
+            $table->string('featured_image', length: 2048);
             $table->longText('body');
             $table->boolean('active');
-            $table->datetime('publisted_at')->nullable();
+            $table->dateTime('published_at')->nullable();
             $table->foreignIdFor(\App\Models\User::class, 'user_id');
             $table->timestamps();
         });
